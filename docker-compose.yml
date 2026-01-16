@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  dkt-report-service:
+    container_name: dkt-report-service
+    image: dkt-report-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev
+    env_file:
+      - .env
+    ports:
+      - ${APP_CONTAINER_PORT}:${PORT}
+    volumes:
+      - /app/node_modules
+      - .:/app
+    restart: unless-stopped
+

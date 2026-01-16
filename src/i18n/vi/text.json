@@ -1,0 +1,10 @@
+{
+  "DONE": "Hoàn thành",
+  "TO_DO": "Chưa thực hiện",
+  "DOING": "Đang thực hiện",
+  "PRODUCING_STEP": "Công đoạn",
+  "OVERTIME":"Ngoài giờ",
+  "BUSSINESS":"Công tác",
+  "APPROVED":"Đã duyệt",
+  "UNAPPROVED":"Chưa duyệt"
+}

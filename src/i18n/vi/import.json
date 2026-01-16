@@ -1,0 +1,161 @@
+{
+  "error": {
+    "action": "Hành động phải là Tạo hoặc Sửa",
+    "maxLength": "\"{value}\" tối đa {number} ký tự",
+    "notNull": "\"{value}\" không được để trống",
+    "duplicateCode": "Giá trị mã \"{value}\" bị lặp trong file import",
+    "factoryWasConfirm": "Dữ liệu nhà máy mã \"{value}\" đã được xác nhận",
+    "notFound": "Dữ liệu \"{value}\" không tồn tại",
+    "codeExist": "Mã \"{value}\" đã tồn tại",
+    "codeNotExist": "Mã \"{value}\" không tồn tại",
+    "UnitInValid": "Đơn vị \"{value}\" không hợp lệ",
+    "hasStorageSpace": "Mã \"{value}\", không gian lưu trữ phải có chiều dài, chiều rộng, chiều cao",
+    "notNumber": "\"{value}\" không phải số",
+    "detailNotFound": "Dữ liệu chi tiết \"{value}\" không tồn tại",
+    "codeRouteNotExist": "Mã tuyến \"{value}\" không tồn tại",
+    "codePickupPointNotExist": "Mã trạm \"{value}\" không tồn tại",
+    "codeRoleInvalid": "Mã vai trò không hợp lệ.",
+    "codeOrgInvalid": "Mã bộ phận không hợp lệ.",
+    "idFactoryInvalid": "ID nhà máy không hợp lệ.",
+    "codeAnduserNameAndEmailNotMap": "Mã nhân viên, tên đăng nhập và email không trùng khớp.",
+    "codeAnduserNameNotMap": "Mã nhân viên và tên đăng nhập không trùng khớp."
+  },
+  "common": {
+    "action": "Hành động",
+    "createdAt": "Ngày tạo",
+    "createdBy": "Người tạo",
+    "description": "Mô tả",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "add": "Tạo",
+    "edit": "Sửa",
+    "success": "Thành công",
+    "fail": "Thất bại",
+    "active":"Hoạt động",
+    "inActive":"Tạm dừng",
+    "yes":"Có",
+    "no":"Không"
+  },
+  "vehicleCategory":{
+    "code":"Mã loại xe",
+    "name":"Tên loại xe",
+    "totalSeat":"Số lượng chỗ ngồi",
+    "description":"Mô tả",
+    "status":"Trạng thái"
+  },
+  "pickupPoint":{
+    "code":"Mã trạm",
+    "name":"Trạm đón / trả",
+    "timeDeparture":"Giờ đón",
+    "timeArrival":"Giờ trả",
+    "location":"Địa chỉ",
+    "status":"Trạng thái"
+  },
+  "rosterCalendarExcludeDayoff":{
+    "codeEmp":"Mã NV",
+    "nameEmp":"Họ tên",
+    "codeOrgStructure":"Bộ phận",
+    "codeRoute":"Mã tuyến",
+    "codeShift":"Ca làm việc",
+    "timeStart":"Giờ bắt đầu ca",
+    "timeEnd":"Giờ kết thúc ca",
+    "dateStart":"Ngày bắt đầu",
+    "dateEnd":"Ngày kết thúc",
+    "syncDate":"Ngày cập nhật",
+    "isSyncSuccess":"Đồng bộ",
+    "sourceType":"Source"
+  },
+  "profileCustom":{
+    "code":"Mã NV",
+    "name":"Họ tên",
+    "codeAttendance":"Mã chấm công",
+    "codeOrgStructure":"Mã bộ phận",
+    "codePosition":"Mã chức vụ",
+    "statusSyn":"Trạng thái",   
+    "dateQuit":"Ngày nghỉ việc",   
+    "routeCode":"Mã tuyến",    
+    "pickupPointCode":"Mã trạm đón / trả" ,  
+    "factoryId":"ID Nhà máy"    
+  },
+  "route":{
+    "code":"Mã tuyến",
+    "name":"Tên tuyến",
+    "description":"Ghi chú",
+    "runMon":"Chạy thứ hai",
+    "runTue":"Chạy thứ ba",
+    "runWed":"Chạy thứ tư",
+    "runThu":"Chạy thứ năm",
+    "runFri":"Chạy thứ sáu",
+    "runSat":"Chạy thứ bảy",
+    "runSun":"Chạy chủ nhật",
+    "status":"Trạng thái",
+    "pickupPoint":{
+      "code":"Mã trạm đón / trả",
+      "order":"Thứ tự"
+    },
+    "vehicleCategory":{
+      "code":"Mã loại xe",
+      "number":"Số lượng"
+    },
+    "catShift":{
+      "code":"Mã ca",
+      "fixedVehicle":"Số chỗ ngồi"
+    }
+  },
+  "factory":{
+    "code":"Mã nhà máy",
+    "name":"Tên nhà máy",
+    "location":"Địa chỉ",
+    "status":"Trạng thái"
+  },
+  "sheetName":{
+    "vehicleCategory":{
+      "Sheet1":"Sheet1"
+    },
+    "pickupPoint":{
+      "Sheet1":"Sheet1"
+    },
+    "profileCustom":{
+      "Sheet1":"Sheet1"
+    },
+    "factory":{
+      "Sheet1":"Nhà máy"
+    },
+    "route":{
+      "Sheet1":"Tuyến",
+      "Sheet2":"Trạm đón, trả",
+      "Sheet3":"Ca"
+    },
+    "user":{
+      "Sheet1":"Sheet1"
+    },
+    "rosterCalendar":{
+      "Sheet1":"Sheet1"
+    },
+    "rosterCalendarExcludeDayoff":{
+      "Sheet1":"Sheet1"
+    }
+  },
+  "rosterCalendar":{
+    "no":"STT",
+    "codeEmp":"MSNV",
+    "nameEmp":"Họ và Tên",
+    "unitCode":"Mã đơn vị",
+    "routeCode":"Mã tuyến",
+    "pickupPointCode":"Mã trạm đón/trả",
+    "factoryId":"Mã nhà máy"
+  },
+  "user":{
+    "code":"Mã nhân viên",
+    "userName":"Tên đăng nhập",
+    "fullName":"Họ tên",
+    "email":"Email",
+    "password":"Mật khẩu",
+    "dateOfBirth":"Ngày sinh",
+    "phone":"Số điện thoại",
+    "orgStructureIds":"Mã bộ phận",
+    "factoryId":"ID nhà máy",
+    "userRoleIds":"Mã vai trò",
+    "status":"Trạng thái"
+  }
+}

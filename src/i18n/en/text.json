@@ -1,0 +1,6 @@
+{
+  "DONE": "Complete",
+  "TO_DO": "Unfulfilled",
+  "DOING": "Processing",
+  "PRODUCING_STEP": "Producing step"
+}

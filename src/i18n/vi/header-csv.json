@@ -1,0 +1,21 @@
+{
+    "i": "STT",
+    "boqCode": "Mã công trình",
+    "boqName": "Tên công trình",
+    "planCode": "Mã kế hoạch",
+    "planName": "Tên kế hoạch",
+    "itemName": "Tên TP",
+    "itemCode": "Mã TP",
+    "subItemName": "Mã bán TP",
+    "routingName": "Tên quy trình",
+    "bomCode": "Mã BOM",
+    "versionName": "Phiên bản",
+    "producingStep": "Công đoạn",
+    "planQuantity": "Số lượng kế hoạch",
+    "quantity": "Số lượng sản xuất",
+    "needQcQuantity": "SL cần QC",
+    "failedQuantity": "SL lỗi còn lại",
+    "failQuantity": "SL lỗi",
+    "qcQuantity": "SL đã QC",
+    "process": "Tiến độ"
+}

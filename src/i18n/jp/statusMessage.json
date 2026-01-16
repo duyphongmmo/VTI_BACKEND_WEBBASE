@@ -1,0 +1,12 @@
+{
+  "SUCCESS": "成功しました",
+  "ERROR": "エラー",
+  "NOT_FOUND": "見つかりません",
+  "BAD_REQUEST": "リクエストが不正です",
+  "UNAUTHORIZED": "未認証",
+  "FORBIDDEN": "アクセス権限がありません",
+  "INTERNAL_SERVER_ERROR": "システムエラー",
+  "CREATED": "作成に成功しました",
+  "UPDATED": "更新に成功しました",
+  "DELETED": "削除に成功しました"
+}

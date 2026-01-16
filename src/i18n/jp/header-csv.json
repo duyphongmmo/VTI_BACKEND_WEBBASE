@@ -1,0 +1,21 @@
+{
+  "i": "項番",
+  "boqCode": "BOQコード",
+  "boqName": "BOQ名",
+  "planCode": "計画コード",
+  "planName": "計画名",
+  "itemName": "完成品名",
+  "itemCode": "完成品コード",
+  "subItemName": "仕掛品コード",
+  "routingName": "プロセス名",
+  "bomCode": "BOMコード",
+  "versionName": "バージョン",
+  "producingStep": "工程",
+  "planQuantity": "計画数量",
+  "quantity": "製造数量",
+  "needQcQuantity": "要品質管理数量",
+  "failedQuantity": "不良品残量",
+  "failQuantity": "不良品数量",
+  "qcQuantity": "品質管理済数量",
+  "process": "進捗"
+}

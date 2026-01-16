@@ -1,0 +1,21 @@
+{
+    "i": "Ordinal number",
+    "boqCode": "BOQ code",
+    "boqName": "BOQ name",
+    "planCode": "Plan code",
+    "planName": "Plan name",
+    "itemName": "Item name",
+    "itemCode": "Item code",
+    "subItemName": "Sub item name",
+    "routingName":"Routing name",
+    "bomCode": "BOM code",
+    "versionName": "Version name",
+    "producingStep": "Producing step",
+    "planQuantity": "Plan quantity",
+    "quantity": "Quantity",
+    "needQcQuantity": "Need QC quantity",
+    "failedQuantity": "Remain failed quantity",
+    "failQuantity": "Failed quantity",
+    "qcQuantity": "QC quantity",
+    "process": "Process"
+}

@@ -1,0 +1,78 @@
+{
+  "success": "Thành công",
+  "userRole":{
+    "codeInUse":"Vai trò đang được sử dụng"
+  },
+  "routingHistory": {
+    "create": "Tạo quy trình",
+    "update": "Cập nhật thông tin quy trình",
+    "inactive": "Tạm dừng quy trình",
+    "active": "Cập nhật trạng thái: Tạm dừng -> Hoạt động"
+  },
+  "moldHistory": {
+    "create": "Tạo khuôn",
+    "update": "Cập nhật thông tin khuôn",
+    "inactive": "Tạm dừng khuôn",
+    "active": "Cập nhật trạng thái: Tạm dừng -> Hoạt động"
+  },
+  "changeStatusSuccess": "Cập nhật trạng thái thành công",
+  "defineFactory": {
+    "createSuccess": "Tạo thành công Nhà máy",
+    "updateSuccess": "Sửa thành công Nhà máy",
+    "deleteSuccess": "Xóa thành công Nhà máy",
+    "activeCode":"Mã nhà máy {codes} đang hoạt động"
+  },
+  "defineUser": {
+    "createSuccess": "Tạo thành công Người dùng",
+    "updateSuccess": "Sửa thành công Người dùng",
+    "deleteSuccess": "Xóa thành công Người dùng"
+  },
+  "vehicleCategory":{
+    "activeCode":"Mã loại xe {codes} đang hoạt động"
+  },
+  "pickupPoint":{
+    "activeCode":"Mã trạm đón/trả {codes} đang hoạt động",
+    "codeInUse":"Mã trạm đón/trả {codes} đang được sử dụng"
+  },
+  "route":{
+    "codeRegistered":"Mã tuyến xe {codes} đã được đăng ký"
+  }, 
+  "sync":{
+    "orgStructure":{
+      "success":"Đồng bộ danh sách Bộ phận thành công!",
+      "error":"Đồng bộ danh sách Bộ phận lỗi! Vui lòng thử lại"
+    },
+    "position":{
+      "success":"Đồng bộ danh sách Chức vụ thành công!",
+      "error":"Đồng bộ danh sách  Chức vụ  lỗi! Vui lòng thử lại"
+    },
+    "profileCustom":{
+      "success":"Đồng bộ danh sách nhân viên thành công!",
+      "error":"Đồng bộ danh sách nhân viên lỗi! Vui lòng thử lại"
+    },
+    "catShift":{
+      "success":"Đồng bộ danh sách Ca Làm Việc thành công!",
+      "error":"Đồng bộ danh sách Ca Làm Việc lỗi! Vui lòng thử lại"
+    },
+    "rosterCalendar":{
+      "success":"Đồng bộ danh sách Chấm công: Ca chính thành công!",
+      "error":"Đồng bộ danh sách Chấm công: Ca chính lỗi! Vui lòng thử lại"
+    },
+    "rosterCalendarExcludeDayoff":{
+      "success":"Đồng bộ danh sách Chấm công không gồm ngày nghỉ thành công!",
+      "error":"Đồng bộ danh sách Chấm công không gồm ngày nghỉ lỗi! Vui lòng thử lại"
+    },
+    "overtimePlan":{
+      "success":"Đồng bộ danh sách Chấm công: Ngoài giờ thành công !",
+      "error":"Đồng bộ danh sách Chấm công: Ngoài giờ lỗi! Vui lòng thử lại"
+    },
+    "bussinessTravel":{
+      "success":"Đồng bộ danh sách Chấm công: Công tác thành công!",
+      "error":"Đồng bộ danh sách Chấm công: Công tác lỗi! Vui lòng thử lại"
+    },
+    "reportOvertimeAndBussinessTravel":{
+      "success":"Đồng bộ danh sách Chấm công: Ngoài giờ và Công tác thành công!",
+      "error":"Không có dữ liệu cần đồng bộ hoặc quá trình đồng bộ xảy ra lỗi!"
+    }
+  }
+}
