@@ -22,19 +22,24 @@ export class DashboardService implements DashboardServiceInterface {
     private readonly i18n: I18nService,
   ) {}
 
+  // call oracle repository
+// group data by kpiId and busiDiviId
+// sort periodType Q M W D
+// return charts for dashboard
+
+  // =========================
+  // DASHBOARD DATA (Normal)
+  // =========================
   async getDashboardData(
     request: GetDashboardDto,
   ): Promise<ResponsePayload<any>> {
     const { page } = request;
 
-    // Get reports list
     const [reports, total] =
       await this.reportRepository.getListForDashboard(request);
 
-    // Calculate statistics
     const stats = this.calculateStats(reports);
 
-    // Transform to DTO
     const reportsDto = plainToInstance(DashboardReportDto, reports, {
       excludeExtraneousValues: true,
     });
@@ -54,6 +59,67 @@ export class DashboardService implements DashboardServiceInterface {
       .build();
   }
 
+  // =========================
+  // DASHBOARD DATA (Oracle)
+  // =========================
+  async getDashboardDataOracle(request: GetDashboardDto): Promise<any> {
+    const { page } = request;
+
+    const [reports, total] =
+      await this.reportOracleRepository.getListForDashboard(request);
+
+    const stats = this.calculateStats(reports);
+
+    const reportsDto = plainToInstance(DashboardReportDto, reports, {
+      excludeExtraneousValues: true,
+    });
+
+    const response = {
+      items: reportsDto,
+      meta: {
+        stats,
+        total,
+        page,
+      },
+    };
+
+    return new ResponseBuilder(response)
+      .withCode(ResponseCodeEnum.SUCCESS)
+      .withMessage(await this.i18n.translate('statusMessage.SUCCESS'))
+      .build();
+  }
+
+  // =========================
+  // CHART: GROUP + SORT
+  // =========================
+  async getDashboardChartYield(request: GetDashboardDto): Promise<any> {
+    const { page } = request;
+
+    const [reports, total] =
+      await this.reportOracleRepository.getDashboardChartYield(request);
+
+    // 1) group theo KPI_ID + BUSI_DIVI_ID
+    const charts = this.groupByKpiAndBusiDivi(reports);
+
+    // 2) sort KPI 1 -> 2 -> ...
+    // 3) sort periodType Q -> M -> W -> D và date tăng dần
+    const chartsSorted = this.sortCharts(charts);
+
+    return new ResponseBuilder({
+      charts: chartsSorted,
+      meta: {
+        total,
+        page,
+      },
+    })
+      .withCode(ResponseCodeEnum.SUCCESS)
+      .withMessage(await this.i18n.translate('statusMessage.SUCCESS'))
+      .build();
+  }
+
+  // =========================
+  // UTIL: STATS
+  // =========================
   private calculateStats(reports: any[]): DashboardStatsDto {
     const totalReports = reports.length;
     const totalValue = reports.reduce(
@@ -74,33 +140,70 @@ export class DashboardService implements DashboardServiceInterface {
     };
   }
 
-  async getDashboardDataOracle(request: GetDashboardDto): Promise<any> {
-    const { page } = request;
+  // =========================
+  // UTIL: GROUP KPI + BUSI
+  // =========================
+  private groupByKpiAndBusiDivi(reports: any[]) {
+    const map = new Map<string, any>();
 
-    // Get reports list
-    const [reports, total] =
-      await this.reportOracleRepository.getListForDashboard(request);
+    for (const item of reports) {
+      const kpiId = item.KPI_ID;
+      const busiDiviId = item.BUSI_DIVI_ID;
+      const busiName = item.BUSI_NAME;
 
-    // Calculate statistics
-    const stats = this.calculateStats(reports);
+      const key = `${kpiId}_${busiDiviId}`;
 
-    // Transform to DTO
-    const reportsDto = plainToInstance(DashboardReportDto, reports, {
-      excludeExtraneousValues: true,
-    });
+      if (!map.has(key)) {
+        map.set(key, {
+          kpiId,
+          busiDiviId,
+          busiName,
+          data: [],
+        });
+      }
 
-    const response = {
-      items: reportsDto,
-      meta: {
-        stats,
-        total,
-        page,
-      },
+      map.get(key).data.push({
+        periodType: item.PERIOD_TYPE,
+        periodKey: item.PERIOD_KEY,
+        date: item.DT_FROM,
+        ppm: item.PPM,
+      });
+    }
+
+    return Array.from(map.values());
+  }
+
+  // =========================
+  // UTIL: SORT CHARTS + DATA
+  // =========================
+  private sortCharts(charts: any[]) {
+    const PERIOD_ORDER: Record<string, number> = { Q: 1, M: 2, W: 3, D: 4 };
+
+    const normalizePeriodType = (t: string) => {
+      const x = (t || '').toUpperCase().trim();
+      return PERIOD_ORDER[x] ? x : 'D';
     };
 
-    return new ResponseBuilder(response)
-      .withCode(ResponseCodeEnum.SUCCESS)
-      .withMessage(await this.i18n.translate('statusMessage.SUCCESS'))
-      .build();
+    // sort charts KPI 1 -> 2
+    const sortedCharts = [...(charts ?? [])].sort(
+      (a, b) => (a.kpiId ?? 0) - (b.kpiId ?? 0),
+    );
+
+    // sort data by periodType Q->M->W->D, then by date asc, then by periodKey asc
+    for (const ch of sortedCharts) {
+      ch.data = [...(ch.data ?? [])].sort((x, y) => {
+        const ox = PERIOD_ORDER[normalizePeriodType(x.periodType)] ?? 999;
+        const oy = PERIOD_ORDER[normalizePeriodType(y.periodType)] ?? 999;
+        if (ox !== oy) return ox - oy;
+
+        const dx = x.date ? new Date(x.date).getTime() : 0;
+        const dy = y.date ? new Date(y.date).getTime() : 0;
+        if (dx !== dy) return dx - dy;
+
+        return String(x.periodKey ?? '').localeCompare(String(y.periodKey ?? ''));
+      });
+    }
+
+    return sortedCharts;
   }
 }

@@ -6,4 +6,8 @@ export interface DashboardServiceInterface {
   getDashboardDataOracle(
     request: GetDashboardDto,
   ): Promise<ResponsePayload<any>>;
+
+  getDashboardChartYield(
+    request: GetDashboardDto,
+  ): Promise<ResponsePayload<any>>;
 }

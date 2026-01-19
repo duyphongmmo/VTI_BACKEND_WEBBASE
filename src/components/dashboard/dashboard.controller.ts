@@ -4,6 +4,7 @@ import { SuccessResponse } from '@utils/success.response.dto';
 import { isEmpty } from 'lodash';
 import { GetDashboardDto } from './dto/request/get-dashboard.request.dto';
 import { DashboardServiceInterface } from './interface/dashboard.service.interface';
+import { Public } from '@core/decorator/set-public.decorator';
 
 @ApiTags('Dashboard')
 @Controller('dashboard')
@@ -33,6 +34,7 @@ export class DashboardController {
     return await this.dashboardService.getDashboardData(query);
   }
 
+  @Public()
   @Get('oracle')
   async getDashboardOracle(@Query() query: GetDashboardDto) {
     const { responseError } = query as any;
@@ -42,4 +44,15 @@ export class DashboardController {
 
     return await this.dashboardService.getDashboardDataOracle(query);
   }
+
+    @Public()
+  @Get('get-dashboard-chart')
+  async getDashboardChart(@Query() query: GetDashboardDto) {
+    const { request,responseError } = query as any;
+    if (responseError && !isEmpty(responseError)) {
+      return responseError;
+    }
+    return await this.dashboardService.getDashboardChartYield(request);
+  }
+
 }

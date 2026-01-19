@@ -82,11 +82,33 @@ export class ReportOracleRepository {
     `;
 
     // ===== EXECUTE =====
-    const [data, countRow] = await Promise.all([
-      this.oracleService.executeQuery(dataSql, dataBinds),
-      this.oracleService.getOne<{ total: number }>(countSql, binds),
-    ]);
 
-    return [data, countRow?.total ?? 0];
+
+      const data2 = await this.oracleService.callRefCursorFunction(
+  'DISVINA.PP_DEV_T.GET_ALL_KPI',
+  {
+    P_FROM_DATE: '2026-01-01',
+    P_TO_DATE: '2026-01-19',
+  },
+  'P_CURSOR',
+);
+
+
+    return [[],0]
   }
+
+    async getDashboardChartYield(request: any): Promise<[any[], number]> {
+      const {fromDate,toDate} = request
+      const data = await this.oracleService.callRefCursorFunction(
+      'DISVINA.PP_DEV_T.GET_ALL_KPI',
+      {
+        P_FROM_DATE: fromDate,
+        P_TO_DATE: toDate,
+      },
+      'P_CURSOR',
+    );
+
+    return [data,0]
+  }
+
 }

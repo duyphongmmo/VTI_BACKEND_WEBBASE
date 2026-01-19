@@ -7,12 +7,12 @@ export class GetDashboardDto extends PaginationQuery {
   @ApiPropertyOptional({ description: 'Start date (YYYY-MM-DD)' })
   @IsString()
   @IsOptional()
-  startDate?: string;
+  fromDate?: string;
 
   @ApiPropertyOptional({ description: 'End date (YYYY-MM-DD)' })
   @IsString()
   @IsOptional()
-  endDate?: string;
+  toDate?: string;
 
   @ApiPropertyOptional({ description: 'Report type filter' })
   @IsString()
@@ -24,4 +24,7 @@ export class GetDashboardDto extends PaginationQuery {
   @IsInt()
   @IsOptional()
   factoryId?: number;
+
+
+  
 }

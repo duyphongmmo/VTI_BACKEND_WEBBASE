@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import * as oracledb from 'oracledb'
 
 @Injectable()
 export class OracleService {
@@ -8,7 +9,7 @@ export class OracleService {
   constructor(
     @Inject('ORACLE_DATA_SOURCE')
     private dataSource: DataSource,
-  ) {}
+  ) { }
 
   /**
    * Execute a raw SELECT query
@@ -216,4 +217,66 @@ export class OracleService {
       total,
     };
   }
+
+
+
+  async callRefCursorFunction<T = any>(
+    functionName: string,
+    binds: Record<string, any>,
+    returnCursorName: string,
+    options?: { fetchSize?: number; outFormatObject?: boolean },
+  ): Promise<T[]> {
+    const fetchSize = options?.fetchSize ?? 500;
+    const outFormatObject = options?.outFormatObject ?? true;
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    const conn: any = (queryRunner as any).databaseConnection;
+
+    try {
+      // RETURN cursor
+      binds[returnCursorName] = { dir: oracledb.BIND_OUT, type: oracledb.CURSOR };
+
+      const paramNames = Object.keys(binds).filter(
+        (k) => k !== returnCursorName,
+      );
+
+      const namedArgs = paramNames.map((p) => `${p} => :${p}`).join(', ');
+
+      const plsql = `
+      BEGIN
+        :${returnCursorName} := ${functionName}(${namedArgs});
+      END;`;
+
+      console.log(plsql);
+      console.log('BINDS =', Object.keys(binds));
+
+      const execOptions: any = {};
+      if (outFormatObject) execOptions.outFormat = oracledb.OUT_FORMAT_OBJECT;
+
+      const result = await conn.execute(plsql, binds, execOptions);
+
+      const cursor = result?.outBinds?.[returnCursorName];
+      if (!cursor) return [];
+
+      return await this.fetchAllFromCursor<T>(cursor, fetchSize);
+    } finally {
+      await queryRunner.release().catch(() => undefined);
+    }
+  }
+
+  private async fetchAllFromCursor<T>(cursor: any, fetchSize: number): Promise<T[]> {
+    const rows: any[] = [];
+    try {
+      while (true) {
+        const chunk = await cursor.getRows(fetchSize);
+        if (!chunk || chunk.length === 0) break;
+        rows.push(...chunk);
+      }
+      return rows as T[];
+    } finally {
+      await cursor.close().catch(() => undefined);
+    }
+  }
+
 }
