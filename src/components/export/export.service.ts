@@ -28,7 +28,7 @@ export class ExportService implements ExportServiceInterface {
   async export(request: ExportRequestDto): Promise<ExportResponseDto> {
     const { type } = request;
     let workbook: Workbook;
-
+    console.log("aaaa")
     switch (type) {
       case ExportTypeEnum.DASHBOARD:
         workbook = await this.exportDashboard(request);

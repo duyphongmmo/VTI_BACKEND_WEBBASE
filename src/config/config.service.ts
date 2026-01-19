@@ -36,8 +36,9 @@ export class ConfigService {
       port: process.env.ORACLE_PORT || 1521,
       username: process.env.ORACLE_USERNAME || 'system',
       password: process.env.ORACLE_PASSWORD || 'oracle',
-      serviceName: process.env.ORACLE_SERVICE_NAME || 'XEPDB1',
+      serviceName: 'sc1vina',
       logging: process.env.ORACLE_LOGGING || false,
+      instantClientDir:  process.env.ORACLE_CLIENT_DIR || ''
     };
   }
 
