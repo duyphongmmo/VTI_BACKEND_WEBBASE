@@ -1,27 +1,27 @@
-import { Controller, Get, Inject, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SuccessResponse } from '@utils/success.response.dto';
-import { isEmpty } from 'lodash';
-import { GetDashboardDto } from './dto/request/get-dashboard.request.dto';
-import { DashboardServiceInterface } from './interface/dashboard.service.interface';
-import { Public } from '@core/decorator/set-public.decorator';
+import { Controller, Get, Inject, Query } from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { SuccessResponse } from "@utils/success.response.dto";
+import { isEmpty } from "lodash";
+import { GetDashboardDto } from "./dto/request/get-dashboard.request.dto";
+import { DashboardServiceInterface } from "./interface/dashboard.service.interface";
+import { Public } from "@core/decorator/set-public.decorator";
 
-@ApiTags('Dashboard')
-@Controller('dashboard')
+@ApiTags("Dashboard")
+@Controller("dashboard")
 export class DashboardController {
   constructor(
-    @Inject('DashboardServiceInterface')
+    @Inject("DashboardServiceInterface")
     private readonly dashboardService: DashboardServiceInterface,
   ) {}
 
   @ApiOperation({
-    summary: 'Get dashboard data with reports and statistics',
+    summary: "Get dashboard data with reports and statistics",
     description:
-      'Retrieve dashboard data including reports list and aggregated statistics',
+      "Retrieve dashboard data including reports list and aggregated statistics",
   })
   @ApiResponse({
     status: 200,
-    description: 'Dashboard data retrieved successfully',
+    description: "Dashboard data retrieved successfully",
     type: SuccessResponse,
   })
   @Get()
@@ -35,7 +35,7 @@ export class DashboardController {
   }
 
   @Public()
-  @Get('oracle')
+  @Get("oracle")
   async getDashboardOracle(@Query() query: GetDashboardDto) {
     const { responseError } = query as any;
     if (responseError && !isEmpty(responseError)) {
@@ -45,14 +45,14 @@ export class DashboardController {
     return await this.dashboardService.getDashboardDataOracle(query);
   }
 
-    @Public()
-  @Get('get-dashboard-chart')
+  @Public()
+  @Get("get-dashboard-chart")
   async getDashboardChart(@Query() query: GetDashboardDto) {
-    const { request,responseError } = query as any;
+    const { request, responseError } = query as any;
     if (responseError && !isEmpty(responseError)) {
       return responseError;
     }
+    console.log("request", request);
     return await this.dashboardService.getDashboardChartYield(request);
   }
-
 }

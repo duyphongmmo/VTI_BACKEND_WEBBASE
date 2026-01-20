@@ -1,31 +1,26 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ResponseCodeEnum } from '@constant/response-code.enum';
-import { ResponseBuilder } from '@utils/response-builder';
-import { I18nService } from 'nestjs-i18n';
-import { plainToInstance } from 'class-transformer';
-import { ReportRepositoryInterface } from '@repositories/report/report.repository.interface';
-import { GetDashboardDto } from './dto/request/get-dashboard.request.dto';
-import { DashboardServiceInterface } from './interface/dashboard.service.interface';
+import { Inject, Injectable } from "@nestjs/common";
+import { ResponseCodeEnum } from "@constant/response-code.enum";
+import { ResponseBuilder } from "@utils/response-builder";
+import { I18nService } from "nestjs-i18n";
+import { plainToInstance } from "class-transformer";
+import { ReportRepositoryInterface } from "@repositories/report/report.repository.interface";
+import { GetDashboardDto } from "./dto/request/get-dashboard.request.dto";
+import { DashboardServiceInterface } from "./interface/dashboard.service.interface";
 import {
   DashboardReportDto,
   DashboardStatsDto,
-} from './dto/response/dashboard.response.dto';
-import { ResponsePayload } from '@utils/response-payload';
-import { ReportOracleRepository } from '@repositories/report/report.oracle.repository';
+} from "./dto/response/dashboard.response.dto";
+import { ResponsePayload } from "@utils/response-payload";
+import { ReportOracleRepository } from "@repositories/report/report.oracle.repository";
 
 @Injectable()
 export class DashboardService implements DashboardServiceInterface {
   constructor(
-    @Inject('ReportRepositoryInterface')
+    @Inject("ReportRepositoryInterface")
     private readonly reportRepository: ReportRepositoryInterface,
     private readonly reportOracleRepository: ReportOracleRepository,
     private readonly i18n: I18nService,
   ) {}
-
-  // call oracle repository
-// group data by kpiId and busiDiviId
-// sort periodType Q M W D
-// return charts for dashboard
 
   // =========================
   // DASHBOARD DATA (Normal)
@@ -55,7 +50,7 @@ export class DashboardService implements DashboardServiceInterface {
 
     return new ResponseBuilder(response)
       .withCode(ResponseCodeEnum.SUCCESS)
-      .withMessage(await this.i18n.translate('statusMessage.SUCCESS'))
+      .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
       .build();
   }
 
@@ -85,7 +80,7 @@ export class DashboardService implements DashboardServiceInterface {
 
     return new ResponseBuilder(response)
       .withCode(ResponseCodeEnum.SUCCESS)
-      .withMessage(await this.i18n.translate('statusMessage.SUCCESS'))
+      .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
       .build();
   }
 
@@ -98,11 +93,7 @@ export class DashboardService implements DashboardServiceInterface {
     const [reports, total] =
       await this.reportOracleRepository.getDashboardChartYield(request);
 
-    // 1) group theo KPI_ID + BUSI_DIVI_ID
     const charts = this.groupByKpiAndBusiDivi(reports);
-
-    // 2) sort KPI 1 -> 2 -> ...
-    // 3) sort periodType Q -> M -> W -> D và date tăng dần
     const chartsSorted = this.sortCharts(charts);
 
     return new ResponseBuilder({
@@ -113,7 +104,7 @@ export class DashboardService implements DashboardServiceInterface {
       },
     })
       .withCode(ResponseCodeEnum.SUCCESS)
-      .withMessage(await this.i18n.translate('statusMessage.SUCCESS'))
+      .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
       .build();
   }
 
@@ -142,14 +133,15 @@ export class DashboardService implements DashboardServiceInterface {
 
   // =========================
   // UTIL: GROUP KPI + BUSI
+  // group key = KPI_ID + BUSI_DIVI_ID
   // =========================
   private groupByKpiAndBusiDivi(reports: any[]) {
     const map = new Map<string, any>();
 
-    for (const item of reports) {
+    for (const item of reports ?? []) {
       const kpiId = item.KPI_ID;
       const busiDiviId = item.BUSI_DIVI_ID;
-      const busiName = item.BUSI_NAME;
+      const busiName = item.BUSI_NAME ?? `BUSI ${busiDiviId}`;
 
       const key = `${kpiId}_${busiDiviId}`;
 
@@ -175,21 +167,29 @@ export class DashboardService implements DashboardServiceInterface {
 
   // =========================
   // UTIL: SORT CHARTS + DATA
+  // sort charts: BUSI_DIVI_ID -> KPI_ID (đúng yêu cầu của bạn)
+  // sort data: Q -> M -> W -> D, rồi date asc
   // =========================
   private sortCharts(charts: any[]) {
     const PERIOD_ORDER: Record<string, number> = { Q: 1, M: 2, W: 3, D: 4 };
 
     const normalizePeriodType = (t: string) => {
-      const x = (t || '').toUpperCase().trim();
-      return PERIOD_ORDER[x] ? x : 'D';
+      const x = (t || "").toUpperCase().trim();
+      return PERIOD_ORDER[x] ? x : "D";
     };
 
-    // sort charts KPI 1 -> 2
-    const sortedCharts = [...(charts ?? [])].sort(
-      (a, b) => (a.kpiId ?? 0) - (b.kpiId ?? 0),
-    );
+    // ✅ sort charts theo busiDiviId trước, rồi kpiId
+    const sortedCharts = [...(charts ?? [])].sort((a, b) => {
+      const ba = a.busiDiviId ?? 0;
+      const bb = b.busiDiviId ?? 0;
+      if (ba !== bb) return ba - bb;
 
-    // sort data by periodType Q->M->W->D, then by date asc, then by periodKey asc
+      const ka = a.kpiId ?? 0;
+      const kb = b.kpiId ?? 0;
+      return ka - kb;
+    });
+
+    // ✅ sort data theo Q->M->W->D, rồi date asc, rồi periodKey asc
     for (const ch of sortedCharts) {
       ch.data = [...(ch.data ?? [])].sort((x, y) => {
         const ox = PERIOD_ORDER[normalizePeriodType(x.periodType)] ?? 999;
@@ -200,7 +200,9 @@ export class DashboardService implements DashboardServiceInterface {
         const dy = y.date ? new Date(y.date).getTime() : 0;
         if (dx !== dy) return dx - dy;
 
-        return String(x.periodKey ?? '').localeCompare(String(y.periodKey ?? ''));
+        return String(x.periodKey ?? "").localeCompare(
+          String(y.periodKey ?? ""),
+        );
       });
     }
 
