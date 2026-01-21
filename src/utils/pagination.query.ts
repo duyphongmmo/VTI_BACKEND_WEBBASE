@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Transform, Type } from "class-transformer";
 import {
   Allow,
   IsArray,
@@ -7,13 +7,13 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-} from 'class-validator';
-import { isJson } from 'src/helper/string.helper';
-import { BaseDto } from '../core/dto/base.dto';
-import { EnumSort } from './common';
+} from "class-validator";
+import { isJson } from "src/helper/string.helper";
+import { BaseDto } from "../core/dto/base.dto";
+import { EnumSort } from "./common";
 
 const ROW = {
-  LIMIT_EXPORT_ON_SHEET: 10000
+  LIMIT_EXPORT_ON_SHEET: 10000,
 };
 
 class Sort {
@@ -43,31 +43,38 @@ export class Filter {
 export class PaginationQuery extends BaseDto {
   KEYS = [];
 
+  @ApiPropertyOptional({ example: 1, description: "" })
+  @IsOptional()
   @Allow()
   @Transform((value) => {
     return Number(value.value) || 1;
   })
   page?: number;
 
+  @ApiPropertyOptional({ example: 10, description: "" })
+  @IsOptional()
   @Allow()
+  @Transform((value) => {
+    return Number(value.value) || 10;
+  })
   limit?: number;
 
-  @ApiPropertyOptional({ example: 'factory', description: '' })
+  @ApiPropertyOptional({ example: "factory", description: "" })
   @IsOptional()
   @IsString()
   keyword?: string;
 
   @ApiPropertyOptional({
-    example: [{ columm: 'name', text: 'abc' }],
-    description: '',
+    example: [{ columm: "name", text: "abc" }],
+    description: "",
   })
   @IsOptional()
   @IsArray()
   @Type(() => Filter)
   @Transform(({ value }) => {
-    if (typeof value !== 'string') return value;
+    if (typeof value !== "string") return value;
 
-    if (value) value = value.replace(/\\/g, '');
+    if (value) value = value.replace(/\\/g, "");
 
     if (isJson(value)) {
       const decodedData = decodeURIComponent(value);
@@ -77,15 +84,15 @@ export class PaginationQuery extends BaseDto {
   filter?: Filter[];
 
   @ApiPropertyOptional({
-    example: [{ columm: 'name', order: 'DESC' }],
-    description: '',
+    example: [{ columm: "name", order: "DESC" }],
+    description: "",
   })
   @Type(() => Sort)
   @IsArray()
   @IsOptional()
   @Transform(({ value }) => {
-    if (typeof value !== 'string') return value;
-    if (value) value = value.replace(/\\/g, '');
+    if (typeof value !== "string") return value;
+    if (value) value = value.replace(/\\/g, "");
 
     if (isJson(value)) {
       const decodedData = decodeURIComponent(value);

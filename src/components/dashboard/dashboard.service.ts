@@ -12,6 +12,8 @@ import {
 } from "./dto/response/dashboard.response.dto";
 import { ResponsePayload } from "@utils/response-payload";
 import { ReportOracleRepository } from "@repositories/report/report.oracle.repository";
+import { isEmpty } from "lodash";
+import { GetDetailYieldDto } from "./dto/request/get-detail-yield.dto";
 
 @Injectable()
 export class DashboardService implements DashboardServiceInterface {
@@ -103,6 +105,76 @@ export class DashboardService implements DashboardServiceInterface {
         page,
       },
     })
+      .withCode(ResponseCodeEnum.SUCCESS)
+      .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
+      .build();
+  }
+
+  async getDetailYield(request: GetDetailYieldDto): Promise<any> {
+    const result = await this.reportOracleRepository.getDetailYield(request);
+    const returnData = result.map((item) => {
+      return {
+        procDate: item.PROC_DATE,
+        procName: item.PROC_NAME,
+        remainQty: item.REMAIN_QTY,
+        goodQty: item.GOOD_QTY,
+        badQty: item.BAD_QTY,
+        ppm: item.PPM,
+      };
+    });
+    return new ResponseBuilder({
+      detail: returnData,
+    })
+      .withCode(ResponseCodeEnum.SUCCESS)
+      .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
+      .build();
+  }
+
+  async getDataPagination(request: GetDashboardDto): Promise<any> {
+    const { page } = request;
+
+    const [reports, total] =
+      await this.reportOracleRepository.getDataPagination(request);
+
+    if (isEmpty(reports)) {
+      return new ResponseBuilder({
+        items: [],
+        meta: {
+          total: 0,
+          page,
+        },
+      })
+        .withCode(ResponseCodeEnum.SUCCESS)
+        .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
+        .build();
+    }
+
+    const returnData = reports.map((item) => {
+      return {
+        kpiId: item.KPI_ID,
+        busidiviID: item.BUSI_DIVI_ID,
+        busiName: item.BUSI_NAME,
+        periodType: item.PERIOD_TYPE,
+        periodKey: item.PERIOD_KEY,
+        dtFrom: item.DT_FROM,
+        ppm: item.PPM,
+        groupName: item.GROUP_NAME,
+        lineGroup: item.LINE_GROUP,
+        procName: item.PROC_NAME,
+        input: item.INPUT,
+        ng: item.NG,
+        yield: item.FPY,
+      };
+    });
+
+    const response = {
+      items: returnData,
+      meta: {
+        total,
+        page,
+      },
+    };
+    return new ResponseBuilder(response)
       .withCode(ResponseCodeEnum.SUCCESS)
       .withMessage(await this.i18n.translate("statusMessage.SUCCESS"))
       .build();

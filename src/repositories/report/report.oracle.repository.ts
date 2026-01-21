@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { OracleService } from '../../components/oracle/oracle.service';
+import { Injectable } from "@nestjs/common";
+import { OracleService } from "../../components/oracle/oracle.service";
+import { first } from "lodash";
+import { GetDetailYieldDto } from "@components/dashboard/dto/request/get-detail-yield.dto";
 
 @Injectable()
 export class ReportOracleRepository {
@@ -14,7 +16,7 @@ export class ReportOracleRepository {
       factoryId,
     } = request;
 
-    const where: string[] = ['r.DELETED_AT IS NULL'];
+    const where: string[] = ["r.DELETED_AT IS NULL"];
     const binds: any[] = [];
 
     // ===== FILTERS =====
@@ -38,7 +40,7 @@ export class ReportOracleRepository {
       where.push(`r.FACTORY_ID = :${binds.length}`);
     }
 
-    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
     // ===== DATA QUERY =====
     const dataSql = `
@@ -83,32 +85,58 @@ export class ReportOracleRepository {
 
     // ===== EXECUTE =====
 
+    const data2 = await this.oracleService.callRefCursorFunction(
+      "DISVINA.PP_DEV_T.GET_ALL_KPI",
+      {
+        P_FROM_DATE: "2026-01-01",
+        P_TO_DATE: "2026-01-19",
+      },
+      "P_CURSOR",
+    );
 
-      const data2 = await this.oracleService.callRefCursorFunction(
-  'DISVINA.PP_DEV_T.GET_ALL_KPI',
-  {
-    P_FROM_DATE: '2026-01-01',
-    P_TO_DATE: '2026-01-19',
-  },
-  'P_CURSOR',
-);
-
-
-    return [[],0]
+    return [[], 0];
   }
 
-    async getDashboardChartYield(request: any): Promise<[any[], number]> {
-      const {fromDate,toDate} = request
-      const data = await this.oracleService.callRefCursorFunction(
-      'DISVINA.PP_DEV_T.GET_ALL_KPI',
+  async getDashboardChartYield(request: any): Promise<[any[], number]> {
+    const { fromDate, toDate } = request;
+    const data = await this.oracleService.callRefCursorFunction(
+      "DISVINA.PP_DEV_T.GET_ALL_KPI",
       {
         P_FROM_DATE: fromDate,
         P_TO_DATE: toDate,
       },
-      'P_CURSOR',
+      "P_CURSOR",
     );
 
-    return [data,0]
+    return [data, 0];
   }
 
+  async getDataPagination(request: any): Promise<[any[], number]> {
+    const { fromDate, toDate, page = 1, take = 10 } = request;
+    const data = await this.oracleService.callRefCursorFunction(
+      "DISVINA.PP_DEV_T.GET_ALL_KPI_PAGE",
+      {
+        P_FROM_DATE: fromDate,
+        P_TO_DATE: toDate,
+        P_PAGE: page,
+        P_PAGE_SIZE: take,
+      },
+      "P_CURSOR",
+    );
+
+    const count = first(data)?.TOTAL_COUNT || 0;
+
+    return [data, Number(count)];
+  }
+  async getDetailYield(request: GetDetailYieldDto): Promise<any> {
+    const { procDate } = request;
+    const data = await this.oracleService.callRefCursorFunction(
+      "DISVINA.PP_DEV_T.GET_DETAIL_KPI",
+      {
+        P_PROC_DATE: procDate,
+      },
+      "P_CURSOR",
+    );
+    return data;
+  }
 }
